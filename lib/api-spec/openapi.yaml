@@ -1,22 +1,30 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Nexora AI Business OS API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
-    description: Health operations
+  - name: dashboard
+  - name: crm
+  - name: tickets
+  - name: hr
+  - name: finance
+  - name: field-service
+  - name: omnichannel
+  - name: ai
+  - name: gamification
+  - name: automations
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,13 +32,1465 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # Dashboard
+  /dashboard/metrics:
+    get:
+      operationId: getDashboardMetrics
+      tags: [dashboard]
+      summary: Get live dashboard metrics
+      responses:
+        "200":
+          description: Dashboard metrics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardMetrics"
+
+  /dashboard/revenue-chart:
+    get:
+      operationId: getRevenueChart
+      tags: [dashboard]
+      summary: Get revenue chart data
+      responses:
+        "200":
+          description: Revenue chart
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChartPoint"
+
+  /dashboard/business-health:
+    get:
+      operationId: getBusinessHealth
+      tags: [dashboard]
+      summary: Get business health score
+      responses:
+        "200":
+          description: Business health score
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BusinessHealth"
+
+  /dashboard/recent-activity:
+    get:
+      operationId: getRecentActivity
+      tags: [dashboard]
+      summary: Recent activity feed
+      responses:
+        "200":
+          description: Activity list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+
+  # CRM
+  /crm/leads:
+    get:
+      operationId: getLeads
+      tags: [crm]
+      summary: List leads
+      parameters:
+        - name: stage
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: search
+          in: query
+          schema:
+            type: ["string", "null"]
+      responses:
+        "200":
+          description: Leads list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Lead"
+    post:
+      operationId: createLead
+      tags: [crm]
+      summary: Create lead
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lead"
+
+  /crm/leads/{id}:
+    get:
+      operationId: getLead
+      tags: [crm]
+      summary: Get lead
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Lead
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lead"
+    patch:
+      operationId: updateLead
+      tags: [crm]
+      summary: Update lead
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lead"
+    delete:
+      operationId: deleteLead
+      tags: [crm]
+      summary: Delete lead
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /crm/pipeline:
+    get:
+      operationId: getPipeline
+      tags: [crm]
+      summary: Get pipeline grouped by stage with totals
+      responses:
+        "200":
+          description: Pipeline stages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PipelineStage"
+
+  /crm/contacts:
+    get:
+      operationId: getContacts
+      tags: [crm]
+      summary: List contacts
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: ["string", "null"]
+      responses:
+        "200":
+          description: Contacts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contact"
+    post:
+      operationId: createContact
+      tags: [crm]
+      summary: Create contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contact"
+
+  /crm/contacts/{id}:
+    patch:
+      operationId: updateContact
+      tags: [crm]
+      summary: Update contact
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contact"
+    delete:
+      operationId: deleteContact
+      tags: [crm]
+      summary: Delete contact
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # Service Desk / Tickets
+  /tickets:
+    get:
+      operationId: getTickets
+      tags: [tickets]
+      summary: List tickets
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: priority
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: search
+          in: query
+          schema:
+            type: ["string", "null"]
+      responses:
+        "200":
+          description: Tickets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Ticket"
+    post:
+      operationId: createTicket
+      tags: [tickets]
+      summary: Create ticket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TicketInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ticket"
+
+  /tickets/{id}:
+    get:
+      operationId: getTicket
+      tags: [tickets]
+      summary: Get ticket
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Ticket
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ticket"
+    patch:
+      operationId: updateTicket
+      tags: [tickets]
+      summary: Update ticket
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TicketUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ticket"
+
+  /tickets/stats:
+    get:
+      operationId: getTicketStats
+      tags: [tickets]
+      summary: Ticket statistics and SLA summary
+      responses:
+        "200":
+          description: Stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TicketStats"
+
+  # HR
+  /hr/employees:
+    get:
+      operationId: getEmployees
+      tags: [hr]
+      summary: List employees
+      parameters:
+        - name: department
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: search
+          in: query
+          schema:
+            type: ["string", "null"]
+      responses:
+        "200":
+          description: Employees
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Employee"
+    post:
+      operationId: createEmployee
+      tags: [hr]
+      summary: Create employee
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Employee"
+
+  /hr/employees/{id}:
+    patch:
+      operationId: updateEmployee
+      tags: [hr]
+      summary: Update employee
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Employee"
+
+  /hr/overview:
+    get:
+      operationId: getHrOverview
+      tags: [hr]
+      summary: HR overview and productivity metrics
+      responses:
+        "200":
+          description: HR overview
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HrOverview"
+
+  # Finance
+  /finance/overview:
+    get:
+      operationId: getFinanceOverview
+      tags: [finance]
+      summary: Financial overview
+      responses:
+        "200":
+          description: Finance overview
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinanceOverview"
+
+  /finance/transactions:
+    get:
+      operationId: getTransactions
+      tags: [finance]
+      summary: List transactions
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: search
+          in: query
+          schema:
+            type: ["string", "null"]
+      responses:
+        "200":
+          description: Transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transaction"
+    post:
+      operationId: createTransaction
+      tags: [finance]
+      summary: Create transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+
+  /finance/cashflow:
+    get:
+      operationId: getCashflowChart
+      tags: [finance]
+      summary: Cashflow chart data
+      responses:
+        "200":
+          description: Cashflow data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChartPoint"
+
+  # Field Service / Work Orders
+  /field-service/orders:
+    get:
+      operationId: getWorkOrders
+      tags: [field-service]
+      summary: List work orders
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: technicianId
+          in: query
+          schema:
+            type: ["integer", "null"]
+      responses:
+        "200":
+          description: Work orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WorkOrder"
+    post:
+      operationId: createWorkOrder
+      tags: [field-service]
+      summary: Create work order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkOrderInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkOrder"
+
+  /field-service/orders/{id}:
+    patch:
+      operationId: updateWorkOrder
+      tags: [field-service]
+      summary: Update work order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkOrderUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkOrder"
+
+  /field-service/technicians:
+    get:
+      operationId: getTechnicians
+      tags: [field-service]
+      summary: List technicians with location
+      responses:
+        "200":
+          description: Technicians
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Technician"
+
+  # Omnichannel
+  /omnichannel/conversations:
+    get:
+      operationId: getConversations
+      tags: [omnichannel]
+      summary: List conversations
+      parameters:
+        - name: channel
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: status
+          in: query
+          schema:
+            type: ["string", "null"]
+      responses:
+        "200":
+          description: Conversations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Conversation"
+
+  /omnichannel/conversations/{id}/messages:
+    get:
+      operationId: getMessages
+      tags: [omnichannel]
+      summary: Get messages in conversation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Message"
+    post:
+      operationId: sendMessage
+      tags: [omnichannel]
+      summary: Send message
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MessageInput"
+      responses:
+        "201":
+          description: Sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+
+  # AI Brain
+  /ai/insights:
+    get:
+      operationId: getAiInsights
+      tags: [ai]
+      summary: Get AI-generated business insights
+      responses:
+        "200":
+          description: AI insights
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AiInsight"
+
+  /ai/chat:
+    post:
+      operationId: chatWithAi
+      tags: [ai]
+      summary: Chat with Nexora Brain AI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AiChatInput"
+      responses:
+        "200":
+          description: AI response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiChatResponse"
+
+  # Gamification
+  /gamification/ranking:
+    get:
+      operationId: getGamificationRanking
+      tags: [gamification]
+      summary: Get leaderboard rankings
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: ["string", "null"]
+      responses:
+        "200":
+          description: Ranking
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RankingEntry"
+
+  # Automations
+  /automations:
+    get:
+      operationId: getAutomations
+      tags: [automations]
+      summary: List automations
+      responses:
+        "200":
+          description: Automations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Automation"
+    post:
+      operationId: createAutomation
+      tags: [automations]
+      summary: Create automation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AutomationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Automation"
+
+  /automations/{id}:
+    patch:
+      operationId: updateAutomation
+      tags: [automations]
+      summary: Update automation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AutomationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Automation"
+    delete:
+      operationId: deleteAutomation
+      tags: [automations]
+      summary: Delete automation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
 components:
   schemas:
     HealthStatus:
       type: object
+      required: [status]
       properties:
         status:
           type: string
-      required:
-        - status
 
+    # Dashboard
+    DashboardMetrics:
+      type: object
+      required: [revenue, openTickets, activeContracts, teamProductivity, salesCount, slaCompliance, aiInsightsCount, businessHealthScore]
+      properties:
+        revenue:
+          type: number
+        revenueChange:
+          type: number
+        openTickets:
+          type: integer
+        contractsProtected:
+          type: number
+        activeContracts:
+          type: integer
+        teamProductivity:
+          type: number
+        salesCount:
+          type: integer
+        slaCompliance:
+          type: number
+        aiInsightsCount:
+          type: integer
+        businessHealthScore:
+          type: number
+
+    ChartPoint:
+      type: object
+      required: [label, value]
+      properties:
+        label:
+          type: string
+        value:
+          type: number
+        secondary:
+          type: ["number", "null"]
+
+    BusinessHealth:
+      type: object
+      required: [score, financial, commercial, support, hr, operations]
+      properties:
+        score:
+          type: number
+        financial:
+          type: number
+        commercial:
+          type: number
+        support:
+          type: number
+        hr:
+          type: number
+        operations:
+          type: number
+
+    ActivityItem:
+      type: object
+      required: [id, type, description, timestamp]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        description:
+          type: string
+        timestamp:
+          type: string
+        icon:
+          type: ["string", "null"]
+        color:
+          type: ["string", "null"]
+
+    # CRM
+    Lead:
+      type: object
+      required: [id, name, email, stage, value, probability, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        company:
+          type: ["string", "null"]
+        stage:
+          type: string
+        value:
+          type: number
+        probability:
+          type: integer
+        aiScore:
+          type: ["integer", "null"]
+        assignedTo:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: ["string", "null"]
+
+    LeadInput:
+      type: object
+      required: [name, email, stage, value]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        company:
+          type: ["string", "null"]
+        stage:
+          type: string
+        value:
+          type: number
+        probability:
+          type: integer
+        assignedTo:
+          type: ["string", "null"]
+
+    LeadUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        company:
+          type: ["string", "null"]
+        stage:
+          type: string
+        value:
+          type: number
+        probability:
+          type: integer
+        assignedTo:
+          type: ["string", "null"]
+
+    PipelineStage:
+      type: object
+      required: [stage, count, totalValue, leads]
+      properties:
+        stage:
+          type: string
+        count:
+          type: integer
+        totalValue:
+          type: number
+        leads:
+          type: array
+          items:
+            $ref: "#/components/schemas/Lead"
+
+    Contact:
+      type: object
+      required: [id, name, email, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        company:
+          type: ["string", "null"]
+        role:
+          type: ["string", "null"]
+        tags:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+
+    ContactInput:
+      type: object
+      required: [name, email]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        company:
+          type: ["string", "null"]
+        role:
+          type: ["string", "null"]
+
+    ContactUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        company:
+          type: ["string", "null"]
+        role:
+          type: ["string", "null"]
+
+    # Tickets
+    Ticket:
+      type: object
+      required: [id, title, status, priority, category, createdAt]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        status:
+          type: string
+        priority:
+          type: string
+        category:
+          type: string
+        assignedTo:
+          type: ["string", "null"]
+        customerId:
+          type: ["integer", "null"]
+        customerName:
+          type: ["string", "null"]
+        slaDeadline:
+          type: ["string", "null"]
+        slaStatus:
+          type: ["string", "null"]
+        aiSuggestedResponse:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: ["string", "null"]
+
+    TicketInput:
+      type: object
+      required: [title, priority, category]
+      properties:
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        priority:
+          type: string
+        category:
+          type: string
+        assignedTo:
+          type: ["string", "null"]
+        customerName:
+          type: ["string", "null"]
+
+    TicketUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        status:
+          type: string
+        priority:
+          type: string
+        assignedTo:
+          type: ["string", "null"]
+        slaStatus:
+          type: ["string", "null"]
+
+    TicketStats:
+      type: object
+      required: [total, open, resolved, inProgress, slaBreached, avgResolutionTime, contractsProtectedValue]
+      properties:
+        total:
+          type: integer
+        open:
+          type: integer
+        resolved:
+          type: integer
+        inProgress:
+          type: integer
+        slaBreached:
+          type: integer
+        avgResolutionTime:
+          type: number
+        contractsProtectedValue:
+          type: number
+
+    # HR
+    Employee:
+      type: object
+      required: [id, name, email, department, role, status, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        department:
+          type: string
+        role:
+          type: string
+        status:
+          type: string
+        productivity:
+          type: ["number", "null"]
+        goalsCompleted:
+          type: ["integer", "null"]
+        goalsTotal:
+          type: ["integer", "null"]
+        points:
+          type: ["integer", "null"]
+        avatarUrl:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    EmployeeInput:
+      type: object
+      required: [name, email, department, role]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        department:
+          type: string
+        role:
+          type: string
+
+    EmployeeUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        department:
+          type: string
+        role:
+          type: string
+        status:
+          type: string
+        productivity:
+          type: ["number", "null"]
+
+    HrOverview:
+      type: object
+      required: [totalEmployees, activeEmployees, productivity, openPositions, departmentBreakdown]
+      properties:
+        totalEmployees:
+          type: integer
+        activeEmployees:
+          type: integer
+        productivity:
+          type: number
+        openPositions:
+          type: integer
+        departmentBreakdown:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChartPoint"
+
+    # Finance
+    FinanceOverview:
+      type: object
+      required: [balance, revenue, expenses, profit, pendingReceivables, pendingPayables]
+      properties:
+        balance:
+          type: number
+        revenue:
+          type: number
+        expenses:
+          type: number
+        profit:
+          type: number
+        pendingReceivables:
+          type: number
+        pendingPayables:
+          type: number
+        revenueChange:
+          type: number
+        profitMargin:
+          type: number
+
+    Transaction:
+      type: object
+      required: [id, type, amount, description, category, date, status]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        amount:
+          type: number
+        description:
+          type: string
+        category:
+          type: string
+        date:
+          type: string
+        status:
+          type: string
+        reference:
+          type: ["string", "null"]
+
+    TransactionInput:
+      type: object
+      required: [type, amount, description, category, date]
+      properties:
+        type:
+          type: string
+        amount:
+          type: number
+        description:
+          type: string
+        category:
+          type: string
+        date:
+          type: string
+
+    # Field Service
+    WorkOrder:
+      type: object
+      required: [id, title, status, priority, technicianId, address, scheduledAt, createdAt]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        status:
+          type: string
+        priority:
+          type: string
+        technicianId:
+          type: integer
+        technicianName:
+          type: ["string", "null"]
+        customerName:
+          type: ["string", "null"]
+        address:
+          type: string
+        lat:
+          type: ["number", "null"]
+        lng:
+          type: ["number", "null"]
+        scheduledAt:
+          type: string
+        completedAt:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    WorkOrderInput:
+      type: object
+      required: [title, priority, technicianId, address, scheduledAt]
+      properties:
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        priority:
+          type: string
+        technicianId:
+          type: integer
+        customerName:
+          type: ["string", "null"]
+        address:
+          type: string
+        lat:
+          type: ["number", "null"]
+        lng:
+          type: ["number", "null"]
+        scheduledAt:
+          type: string
+
+    WorkOrderUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+        technicianId:
+          type: integer
+        scheduledAt:
+          type: string
+        completedAt:
+          type: ["string", "null"]
+
+    Technician:
+      type: object
+      required: [id, name, status, ordersToday]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        phone:
+          type: ["string", "null"]
+        status:
+          type: string
+        lat:
+          type: ["number", "null"]
+        lng:
+          type: ["number", "null"]
+        ordersToday:
+          type: integer
+        completedToday:
+          type: integer
+        avatarUrl:
+          type: ["string", "null"]
+
+    # Omnichannel
+    Conversation:
+      type: object
+      required: [id, channel, customerName, status, lastMessage, lastMessageAt]
+      properties:
+        id:
+          type: integer
+        channel:
+          type: string
+        customerName:
+          type: string
+        customerAvatar:
+          type: ["string", "null"]
+        status:
+          type: string
+        lastMessage:
+          type: string
+        lastMessageAt:
+          type: string
+        unreadCount:
+          type: integer
+        assignedTo:
+          type: ["string", "null"]
+
+    Message:
+      type: object
+      required: [id, conversationId, content, direction, createdAt]
+      properties:
+        id:
+          type: integer
+        conversationId:
+          type: integer
+        content:
+          type: string
+        direction:
+          type: string
+        senderName:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    MessageInput:
+      type: object
+      required: [content]
+      properties:
+        content:
+          type: string
+
+    # AI
+    AiInsight:
+      type: object
+      required: [id, type, title, description, severity, createdAt]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        severity:
+          type: string
+        recommendation:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    AiChatInput:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+        context:
+          type: ["string", "null"]
+
+    AiChatResponse:
+      type: object
+      required: [reply, timestamp]
+      properties:
+        reply:
+          type: string
+        timestamp:
+          type: string
+        actions:
+          type: array
+          items:
+            type: string
+
+    # Gamification
+    RankingEntry:
+      type: object
+      required: [position, name, points, category, badge]
+      properties:
+        position:
+          type: integer
+        name:
+          type: string
+        avatarUrl:
+          type: ["string", "null"]
+        points:
+          type: integer
+        category:
+          type: string
+        badge:
+          type: string
+        change:
+          type: integer
+
+    # Automations
+    Automation:
+      type: object
+      required: [id, name, trigger, status, executionsCount, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        trigger:
+          type: string
+        status:
+          type: string
+        executionsCount:
+          type: integer
+        lastExecutedAt:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    AutomationInput:
+      type: object
+      required: [name, trigger]
+      properties:
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        trigger:
+          type: string
+
+    AutomationUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        trigger:
+          type: string
+        status:
+          type: string

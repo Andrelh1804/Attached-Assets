@@ -1,8 +1,28 @@
 import { Router, type IRouter } from "express";
 import healthRouter from "./health";
+import dashboardRouter from "./dashboard";
+import crmRouter from "./crm";
+import ticketsRouter from "./tickets";
+import hrRouter from "./hr";
+import financeRouter from "./finance";
+import fieldServiceRouter from "./field-service";
+import omnichannelRouter from "./omnichannel";
+import aiRouter from "./ai";
+import gamificationRouter from "./gamification";
+import automationsRouter from "./automations";
 
 const router: IRouter = Router();
 
 router.use(healthRouter);
+router.use(dashboardRouter);
+router.use(crmRouter);
+router.use(ticketsRouter);
+router.use(hrRouter);
+router.use(financeRouter);
+router.use(fieldServiceRouter);
+router.use(omnichannelRouter);
+router.use(aiRouter);
+router.use(gamificationRouter);
+router.use(automationsRouter);
 
 export default router;

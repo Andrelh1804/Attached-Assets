@@ -1,0 +1,309 @@
+PROMPT ULTRA PREMIUM — DESENVOLVIMENTO COMPLETO DE PLATAFORMA SaaS UNICÓRNIO COM IA, UX PERSUASIVA E IDENTIDADE VISUAL CORPORATIVA
+Atue simultaneamente como uma equipe formada pelos melhores especialistas globais em:
+Arquitetura de Software Enterprise
+Gerente de Produto SaaS
+Designer UX/UI Último Ano
+Especialista em Neurovendas
+Especialista em Conversão (CRO)
+Especialista em Branding
+Especialista em Inteligência Artificial
+Especialista em ERP
+Especialista em CRM
+Especialista em ITSM / Service Desk
+Especialista em RH Digital
+Especialista em Automação de Processos
+Especialista em Cyber Security
+Especialista em LGPD
+Especialista em Business Intelligence
+Especialista em Field Service
+Especialista em Fintech
+Especialista em Growth Marketing
+Especialista em Escalabilidade SaaS
+Especialista em Experiência do Cliente
+Sua missão é criar uma plataforma SaaS de nível internacional, capaz de competir com Salesforce, HubSpot, Zendesk, Zoho, Freshworks, ServiceNow e Microsoft Dynamics, porém adaptada ao mercado brasileiro e latino-americano.
+O objetivo é desenvolver uma solução tão completa e visualmente impressionante que qualquer empresário perceba valor imediato e enxergue o sistema como investimento estratégico, e não como custo.
+NOME DA PLATAFORMA
+Nexora AI Business OS
+Significado:
+Nexora = Próximo + Aurora + Nexus
+Representa:
+Conexão
+Inteligência
+Crescimento
+Gestão
+Futuro
+Slogan:
+"Uma única plataforma para controlar toda sua empresa."
+Slogan alternativo:
+"Transformando operações em resultados."
+POSICIONAMENTO
+A Nexora AI não é um software.
+É um Sistema Operacional Empresarial Inteligente.
+O empresário deve sentir que está adquirindo o "cérebro digital" da empresa.
+IDENTIDADE VISUAL
+Objetivo:
+Transmitir:
+Autoridade
+Tecnologia
+Segurança
+Crescimento
+Inovação
+Paleta de Cores
+Primária:
+Azul Profundo
+#0F172A
+Representa:
+Confiança
+Estabilidade
+Corporativo
+Secundária:
+Azul Elétrico
+#2563EB
+Representa:
+Tecnologia
+IA
+Movimento
+Destaque:
+Ciano Inteligente
+#06B6D4
+Representa:
+Automação
+Inovação
+Sucesso:
+#10B981
+Alerta:
+#F59E0B
+Erro:
+#EF4444
+Fundo:
+#F8FAFC
+TIPOGRAFIA
+Títulos:
+Inter Bold
+Legendas:
+Inter SemiBold
+Conteúdo:
+Inter Regular
+SISTEMA DE PROJETO
+Inspirar-se em:
+Linear
+Stripe
+Noção
+Salesforce
+HubSpot
+Segunda-feira
+ClickUp
+Misturar:
+Minimalismo + Enterprise + IA
+EXPERIÊNCIA VISUAL
+O usuário deve sentir:
+"Estou utilizando o sistema mais avançado da empresa."
+Sensação:
+Premium
+Limpo
+Inteligente
+Rápido
+HOME DO SISTEMA
+Ao acessar a plataforma:
+Dashboard vivo em tempo real.
+Programa:
+Receita
+Chamados
+Contratos
+SLA
+Equipes
+Vendas
+IA Insights
+ELEMENTO CENTRAL
+Adicionar:
+Assistente de IA do CEO
+Assistente central da plataforma.
+Sempre visível.
+Flutuante.
+Capaz de:
+Conversar
+Gerar relatórios
+Criar tarefas
+Abrir chamados
+Criar contratos
+Analisar desempenho
+PSICOLOGIA DE CONVERSÃO
+Cada tela deve transmitir:
+Economia
+Controle
+Lucro
+Produtividade
+Exemplo:
+Ao invés de:
+"Chamados Abertos"
+Exibir:
+"R$ 142.000 em contratos protegidos através dos atendimentos."
+Ao invés de:
+"Técnicos ativos"
+Exibir:
+"92% da equipe operando com máxima produtividade."
+MÓDULO CRM
+Criar CRM visualmente superior aos concorrentes.
+Funil:
+Arrastar e soltar
+IA analisando oportunidades
+Pontuação Automática
+Programa:
+Probabilidade de fechamento.
+MÓDULO DE MESA DE SERVIÇO
+Criar experiência semelhante ao ServiceNow.
+Inclua:
+SLA inteligente
+IA classificando tickets
+IA sugerindo respostas
+MÓDULO ORDENS DE SERVIÇO
+Visualização:
+Mapa inteligente.
+Programa:
+Técnicos
+Clientes
+Rotas
+Chamados
+Tempo real.
+MÓDULO DE RH
+Criar Experiência do Funcionário.
+Dashboard do colaborador.
+Programa:
+Objetivos
+Evolução
+Benefícios
+Treinamentos
+Gamificação.
+MÓDULO FINANCEIRO
+Painel semelhante a banco digital.
+Programa:
+Fluxo de caixa
+PIX
+Recebimentos
+Assinaturas
+Com IA financeira.
+MÓDULO OMNICANAL
+Central única:
+
+
+
+
+Direitos autorais
+© 2019 Direitos Autorais © 2019 Todos os Direitos Reservados.
+Resposta unificada.
+IA CORPORATIVA
+Criar módulo exclusivo.
+Nome:
+Cérebro Nexora
+Funções:
+Consultar qualquer dado
+Gerar relatórios
+Prever cancelamentos
+Detectar gargalos
+Criar automações
+DIFERENCIAL ABSOLUTO
+Criar:
+Pontuação de Saúde Empresarial™
+Pontuação exclusiva.
+Escala:
+0 a 100
+Avalia:
+Financeiro
+Comercial
+Atendimento
+RH
+Operações
+Programa:
+Saúde geral da empresa.
+CENTRAL DE EXECUTIVOS
+Área exclusiva.
+Programa:
+Receita prevista
+Riscos
+Oportunidades
+Crescimento
+IA deve agir como consultor empresarial.
+GAMIFICAÇÃO
+Criar ranking:
+Técnicos
+Atendentes
+Fornecedores
+Com:
+Medalhas
+Conquistas
+Premiações
+AUTOMAÇÕES
+Criar construtor semelhante ao n8n.
+Nome:
+Fluxo Nexora
+Arrastar e soltar.
+APP MOBILE
+Criar experiência semelhante a:
+Nubank
+Noção
+ClickUp
+Design premium.
+SEGURANÇA
+Implemente:
+MFA
+OAuth
+SSO
+LGPD
+Auditoria completa
+Criptografia AES-256
+LANDING PAGE DE VENDAS
+Desenvolver página de vendas com padrão unicórnio.
+Seções:
+Herói
+Manchete:
+"Controle toda sua empresa em uma única plataforma inteligente."
+Subtítulo:
+"CRM, Atendimento, RH, Contratos, Financeiro e Inteligência Artificial trabalhando juntos para aumentar seus resultados."
+CTA:
+Solicitar Demonstração
+Sessão de Benefícios
+Programa:
+Redução de custos
+Aumento de produtividade
+Mais vendas
+Menos retrabalho
+Sessão IA
+Mostrar Nexora Brain.
+Sessão de ROI
+Calculadora de economia.
+Sessão de Casos de Uso
+Provedores de Internet
+Empresas de TI
+Energia Solar
+Instalações
+Segurança Eletrônica
+Telecomunicações
+Serviços Técnicos
+ESTRATÉGIA DE MONETIZAÇÃO
+Starter
+Carreira profissional
+Negócios
+Enterprise
+White Label
+Franquia
+Revenda
+Mercado
+API Premium
+ENTREGA FINAL
+Gerar documentação completa contendo:
+Branding
+Identidade Visual
+Manual da Marca
+Sistema de Design UX/UI
+Wireframes
+Protótipos
+Arquitetura Enterprise
+Banco de Dados
+APIs
+Microserviços
+Roadmap de Desenvolvimento
+Estratégia Comercial
+Estratégia de Crescimento
+Estratégia de Escalabilidade Global
+Plano para atingir valuation acima de R$100 milhões
+Projetar a Nexora AI Business OS como uma empresa de tecnologia de próxima geração, preparada para se tornar referência no mercado SaaS corporativo da América Latina.
