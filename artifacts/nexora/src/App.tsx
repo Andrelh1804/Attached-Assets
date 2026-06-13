@@ -4,55 +4,55 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import { AppLayout } from "@/components/layout/AppLayout";
+import LandingPage from "@/pages/LandingPage";
+import Dashboard from "@/pages/Dashboard";
+import CrmPage from "@/pages/CrmPage";
+import TicketsPage from "@/pages/TicketsPage";
+import FieldServicePage from "@/pages/FieldServicePage";
+import HrPage from "@/pages/HrPage";
+import FinancePage from "@/pages/FinancePage";
+import OmnichannelPage from "@/pages/OmnichannelPage";
+import AiPage from "@/pages/AiPage";
+import GamificationPage from "@/pages/GamificationPage";
+import AutomationsPage from "@/pages/AutomationsPage";
 
-// Page imports
-function Home() { return <div className="p-8 text-white">Home Page placeholder</div>; }
-function Dashboard() { return <div className="text-white">Dashboard placeholder</div>; }
-function Crm() { return <div className="text-white">CRM placeholder</div>; }
-function Tickets() { return <div className="text-white">Tickets placeholder</div>; }
-function FieldService() { return <div className="text-white">Field Service placeholder</div>; }
-function Hr() { return <div className="text-white">HR placeholder</div>; }
-function Finance() { return <div className="text-white">Finance placeholder</div>; }
-function Omnichannel() { return <div className="text-white">Omnichannel placeholder</div>; }
-function Ai() { return <div className="text-white">AI placeholder</div>; }
-function Gamification() { return <div className="text-white">Gamification placeholder</div>; }
-function Automations() { return <div className="text-white">Automations placeholder</div>; }
-
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
+});
 
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Home} />
+      <Route path="/" component={LandingPage} />
       <Route path="/app/dashboard">
         <AppLayout><Dashboard /></AppLayout>
       </Route>
       <Route path="/app/crm">
-        <AppLayout><Crm /></AppLayout>
+        <AppLayout><CrmPage /></AppLayout>
       </Route>
       <Route path="/app/tickets">
-        <AppLayout><Tickets /></AppLayout>
+        <AppLayout><TicketsPage /></AppLayout>
       </Route>
       <Route path="/app/field-service">
-        <AppLayout><FieldService /></AppLayout>
+        <AppLayout><FieldServicePage /></AppLayout>
       </Route>
       <Route path="/app/hr">
-        <AppLayout><Hr /></AppLayout>
+        <AppLayout><HrPage /></AppLayout>
       </Route>
       <Route path="/app/finance">
-        <AppLayout><Finance /></AppLayout>
+        <AppLayout><FinancePage /></AppLayout>
       </Route>
       <Route path="/app/omnichannel">
-        <AppLayout><Omnichannel /></AppLayout>
+        <AppLayout><OmnichannelPage /></AppLayout>
       </Route>
       <Route path="/app/ai">
-        <AppLayout><Ai /></AppLayout>
+        <AppLayout><AiPage /></AppLayout>
       </Route>
       <Route path="/app/gamification">
-        <AppLayout><Gamification /></AppLayout>
+        <AppLayout><GamificationPage /></AppLayout>
       </Route>
       <Route path="/app/automations">
-        <AppLayout><Automations /></AppLayout>
+        <AppLayout><AutomationsPage /></AppLayout>
       </Route>
       <Route component={NotFound} />
     </Switch>

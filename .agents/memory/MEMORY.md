@@ -1,0 +1,2 @@
+- [Nexora stack overview](nexora-stack.md) — full SaaS with React+Wouter+FramerMotion frontend, Express API, Drizzle+PG, Orval codegen; dark-first design tokens in index.css
+- [CSS import order](css-import-order.md) — Google Fonts @import must be first line in index.css, before Tailwind @imports, or PostCSS throws
