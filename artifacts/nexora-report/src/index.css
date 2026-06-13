@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --font-sans: var(--app-font-sans);
+  --font-mono: var(--app-font-mono);
+}
+
+:root {
+  --background: 222 47% 11%;
+  --foreground: 210 40% 96%;
+  --border: 217 33% 20%;
+  --input: 217 33% 22%;
+  --ring: 221 83% 53%;
+  --card: 222 47% 14%;
+  --card-foreground: 210 40% 96%;
+  --card-border: 217 33% 20%;
+  --primary: 221 83% 53%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 215 25% 27%;
+  --secondary-foreground: 210 40% 96%;
+  --muted: 217 33% 18%;
+  --muted-foreground: 215 20% 55%;
+  --accent: 187 100% 42%;
+  --accent-foreground: 222 47% 11%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+  --popover: 222 47% 11%;
+  --popover-foreground: 210 40% 96%;
+  --sidebar: 222 47% 9%;
+  --sidebar-foreground: 210 40% 96%;
+  --sidebar-border: 217 33% 17%;
+  --sidebar-primary: 221 83% 53%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 215 25% 22%;
+  --sidebar-accent-foreground: 210 40% 96%;
+  --sidebar-ring: 221 83% 53%;
+  --chart-1: 221 83% 53%;
+  --chart-2: 187 100% 42%;
+  --chart-3: 142 71% 45%;
+  --chart-4: 38 92% 50%;
+  --chart-5: 0 72% 51%;
+  --app-font-sans: 'Inter', system-ui, sans-serif;
+  --app-font-mono: 'JetBrains Mono', Menlo, monospace;
+  --radius: 0.5rem;
+  --primary-border: hsl(221 83% 45%);
+  --secondary-border: hsl(215 25% 32%);
+  --muted-border: hsl(217 33% 23%);
+  --accent-border: hsl(187 100% 35%);
+  --destructive-border: hsl(0 72% 44%);
+}
+
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground font-sans antialiased; }
+}
