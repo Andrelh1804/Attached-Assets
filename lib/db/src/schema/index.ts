@@ -7,3 +7,4 @@ export * from "./work_orders";
 export * from "./technicians";
 export * from "./conversations";
 export * from "./automations";
+export * from "./users";

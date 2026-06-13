@@ -15,6 +15,7 @@ import OmnichannelPage from "@/pages/OmnichannelPage";
 import AiPage from "@/pages/AiPage";
 import GamificationPage from "@/pages/GamificationPage";
 import AutomationsPage from "@/pages/AutomationsPage";
+import PricingPage from "@/pages/PricingPage";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
@@ -24,6 +25,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={LandingPage} />
+      <Route path="/pricing" component={PricingPage} />
       <Route path="/app/dashboard">
         <AppLayout><Dashboard /></AppLayout>
       </Route>

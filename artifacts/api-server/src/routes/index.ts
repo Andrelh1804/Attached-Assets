@@ -10,6 +10,7 @@ import omnichannelRouter from "./omnichannel";
 import aiRouter from "./ai";
 import gamificationRouter from "./gamification";
 import automationsRouter from "./automations";
+import stripeRouter from "./stripe";
 
 const router: IRouter = Router();
 
@@ -24,5 +25,6 @@ router.use(omnichannelRouter);
 router.use(aiRouter);
 router.use(gamificationRouter);
 router.use(automationsRouter);
+router.use(stripeRouter);
 
 export default router;

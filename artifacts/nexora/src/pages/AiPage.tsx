@@ -1,7 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Brain, Send, AlertTriangle, TrendingUp, Zap, BarChart3, Sparkles } from "lucide-react";
+import { Brain, Send, AlertTriangle, TrendingUp, Zap, BarChart3, Sparkles, Lock } from "lucide-react";
 import { useGetAiInsights, useChatWithAi } from "@workspace/api-client-react";
+import { PaywallModal } from "@/components/PaywallModal";
+
+const DEMO_PLAN = "starter";
 
 const SEVERITY_CONFIG: Record<string, { color: string; bg: string; icon: React.ElementType }> = {
   high: { color: "#EF4444", bg: "rgba(239,68,68,0.1)", icon: AlertTriangle },
@@ -22,6 +25,8 @@ const QUICK_PROMPTS = [
 interface Message { role: "user" | "assistant"; content: string; actions?: string[]; }
 
 export default function AiPage() {
+  const isLocked = DEMO_PLAN === "starter";
+  const [showPaywall, setShowPaywall] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { role: "assistant", content: "Ola! Sou o Nexora Brain, sua IA empresarial. Tenho acesso a todos os dados da sua empresa em tempo real. Pergunte-me qualquer coisa sobre receita, chamados, equipe, financeiro ou operacoes." }
   ]);
@@ -47,19 +52,48 @@ export default function AiPage() {
 
   return (
     <div className="p-6 h-full flex flex-col gap-6">
+      <PaywallModal isOpen={showPaywall} moduleName="Nexora Brain" requiredPlan="business" onClose={() => setShowPaywall(false)} />
+
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,#2563EB,#06B6D4)" }}>
-          <Brain size={20} className="text-white" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-bold text-white">Nexora Brain</h1>
-          <div className="flex items-center gap-1.5 text-xs text-cyan-400">
-            <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-            IA Empresarial ativa — conectada a todos os modulos
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,#2563EB,#06B6D4)" }}>
+            <Brain size={20} className="text-white" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-white">Nexora Brain</h1>
+            <div className="flex items-center gap-1.5 text-xs text-cyan-400">
+              <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+              IA Empresarial ativa — conectada a todos os modulos
+            </div>
           </div>
         </div>
+        {isLocked && (
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => setShowPaywall(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white"
+            style={{ background: "linear-gradient(135deg,#06B6D4,#2563EB)", boxShadow: "0 4px 20px rgba(6,182,212,0.3)" }}
+          >
+            <Lock size={14} /> Desbloquear — Plano Business
+          </motion.button>
+        )}
       </div>
+
+      {isLocked && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-xl p-4 flex items-center gap-3 text-sm"
+          style={{ background: "rgba(6,182,212,0.08)", border: "1px solid rgba(6,182,212,0.2)" }}
+        >
+          <Lock size={16} style={{ color: "#06B6D4" }} className="shrink-0" />
+          <span className="text-slate-300">
+            Você está em visualização limitada do Nexora Brain. <button onClick={() => setShowPaywall(true)} className="font-semibold underline" style={{ color: "#06B6D4" }}>Faça upgrade para Business</button> para usar o chat de IA completo e análises preditivas.
+          </span>
+        </motion.div>
+      )}
 
       <div className="grid lg:grid-cols-3 gap-6 flex-1 min-h-0">
         {/* Chat */}

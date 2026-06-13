@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, Zap, Play, Pause, Trash2, Clock, CheckCircle, X } from "lucide-react";
+import { Plus, Zap, Play, Pause, Trash2, Clock, CheckCircle, X, Lock } from "lucide-react";
 import { useGetAutomations, useCreateAutomation, useUpdateAutomation, useDeleteAutomation, getGetAutomationsQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { PaywallModal } from "@/components/PaywallModal";
+
+const DEMO_PLAN = "starter";
 
 const TRIGGER_ICONS: Record<string, string> = {
   "new_ticket": "Novo Chamado", "lead_stage_change": "Mudanca de Etapa", "payment_received": "Pagamento Recebido",
@@ -63,6 +66,8 @@ function NewAutomationModal({ onClose }: { onClose: () => void }) {
 }
 
 export default function AutomationsPage() {
+  const isLocked = DEMO_PLAN === "starter";
+  const [showPaywall, setShowPaywall] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const { data: automations, isLoading } = useGetAutomations();
   const updateAuto = useUpdateAutomation();
@@ -87,15 +92,43 @@ export default function AutomationsPage() {
 
   return (
     <div className="p-6 space-y-6">
+      <PaywallModal isOpen={showPaywall} moduleName="Automações Avançadas" requiredPlan="business" onClose={() => setShowPaywall(false)} />
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Automacoes — Fluxo Nexora</h1>
           <p className="text-slate-500 text-sm">{activeCount} fluxos ativos • {totalExecutions.toLocaleString("pt-BR")} execucoes total</p>
         </div>
-        <button onClick={() => setShowModal(true)} className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: "linear-gradient(135deg,#2563EB,#1d4ed8)" }}>
-          <Plus size={14} /> Novo Fluxo
-        </button>
+        <div className="flex items-center gap-3">
+          {isLocked && (
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              onClick={() => setShowPaywall(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white"
+              style={{ background: "linear-gradient(135deg,#06B6D4,#2563EB)", boxShadow: "0 4px 20px rgba(6,182,212,0.3)" }}
+            >
+              <Lock size={14} /> Desbloquear Business
+            </motion.button>
+          )}
+          <button onClick={() => isLocked ? setShowPaywall(true) : setShowModal(true)} className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white" style={{ background: "linear-gradient(135deg,#2563EB,#1d4ed8)" }}>
+            <Plus size={14} /> Novo Fluxo
+          </button>
+        </div>
       </div>
+
+      {isLocked && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-xl p-4 flex items-center gap-3 text-sm"
+          style={{ background: "rgba(6,182,212,0.08)", border: "1px solid rgba(6,182,212,0.2)" }}
+        >
+          <Lock size={16} style={{ color: "#06B6D4" }} className="shrink-0" />
+          <span className="text-slate-300">
+            Automações ilimitadas estão disponíveis no plano Business. <button onClick={() => setShowPaywall(true)} className="font-semibold underline" style={{ color: "#06B6D4" }}>Ver planos</button>
+          </span>
+        </motion.div>
+      )}
 
       {/* Summary */}
       <div className="grid grid-cols-3 gap-4">
