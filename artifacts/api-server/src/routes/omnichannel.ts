@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { db, conversationsTable, messagesTable } from "@workspace/db";
+import { db, conversationsTable, messagesTable } from "@workspace/db"; // omnichannel tables
 import { eq, sql } from "drizzle-orm";
 import { GetConversationsQueryParams, SendMessageBody } from "@workspace/api-zod";
 

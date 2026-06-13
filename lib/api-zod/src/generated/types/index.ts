@@ -10,6 +10,8 @@ export * from './activityItem';
 export * from './aiChatInput';
 export * from './aiChatResponse';
 export * from './aiInsight';
+export * from './authUser';
+export * from './authUserEnvelope';
 export * from './automation';
 export * from './automationInput';
 export * from './automationUpdate';

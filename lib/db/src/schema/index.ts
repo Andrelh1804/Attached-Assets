@@ -8,3 +8,5 @@ export * from "./technicians";
 export * from "./conversations";
 export * from "./automations";
 export * from "./users";
+export * from "./auth";
+export * from "./omnichannel";

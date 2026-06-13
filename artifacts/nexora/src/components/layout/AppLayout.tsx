@@ -7,6 +7,7 @@ import {
   Search, X, Send, Sparkles, LogOut, Menu
 } from "lucide-react";
 import { useChatWithAi } from "@workspace/api-client-react";
+import { useAuth } from "@workspace/replit-auth-web";
 
 const navSections = [
   { section: "Principal", items: [{ path: "/app/dashboard", label: "Dashboard", icon: LayoutDashboard }] },
@@ -99,6 +100,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const [aiOpen, setAiOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { user, isAuthenticated, login, logout } = useAuth();
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: "hsl(222 47% 11%)" }}>
@@ -149,17 +151,25 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <Settings size={16} className="flex-shrink-0" />
             {sidebarOpen && <span>Configuracoes</span>}
           </div>
-          <div className="nexora-sidebar-item">
+          <button onClick={isAuthenticated ? logout : login} className="nexora-sidebar-item w-full text-left">
             <LogOut size={16} className="flex-shrink-0" />
-            {sidebarOpen && <span>Sair</span>}
-          </div>
+            {sidebarOpen && <span>{isAuthenticated ? "Sair" : "Entrar"}</span>}
+          </button>
           {sidebarOpen && (
             <div className="mt-2 p-3 rounded-lg" style={{ background: "hsl(217 33% 15%)", border: "1px solid hsl(217 33% 22%)" }}>
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold">A</div>
-                <div>
-                  <p className="text-slate-200 text-xs font-medium">Admin Nexora</p>
-                  <p className="text-slate-500 text-xs">Enterprise</p>
+                {user?.profileImageUrl ? (
+                  <img src={user.profileImageUrl} alt="" className="w-7 h-7 rounded-full object-cover" />
+                ) : (
+                  <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold">
+                    {user?.firstName?.[0] ?? user?.email?.[0]?.toUpperCase() ?? "A"}
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <p className="text-slate-200 text-xs font-medium truncate">
+                    {user ? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || user.email || "Usuário" : "Visitante"}
+                  </p>
+                  <p className="text-slate-500 text-xs">{isAuthenticated ? "Autenticado" : "Não autenticado"}</p>
                 </div>
               </div>
             </div>
@@ -186,7 +196,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               style={{ background: "rgba(6,182,212,0.1)", border: "1px solid rgba(6,182,212,0.2)" }}>
               <Sparkles size={14} /> IA
             </button>
-            <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold">A</div>
+            {user?.profileImageUrl ? (
+              <img src={user.profileImageUrl} alt="" className="w-8 h-8 rounded-full object-cover" />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold">
+                {user?.firstName?.[0] ?? user?.email?.[0]?.toUpperCase() ?? "A"}
+              </div>
+            )}
           </div>
         </header>
 

@@ -1,2 +1,2 @@
-- [Nexora stack overview](nexora-stack.md) — full SaaS with React+Wouter+FramerMotion frontend, Express API, Drizzle+PG, Orval codegen; dark-first design tokens in index.css
+- [Nexora stack overview](nexora-stack.md) — architecture, auth setup, AI approach, CRM drag-and-drop, Vite workspace alias requirement, omnichannel table rename
 - [CSS import order](css-import-order.md) — Google Fonts @import must be first line in index.css, before Tailwind @imports, or PostCSS throws
