@@ -1,2 +1,4 @@
 - [Nexora stack overview](nexora-stack.md) — architecture, auth setup, AI approach, CRM drag-and-drop, Vite workspace alias requirement, omnichannel table rename
 - [CSS import order](css-import-order.md) — Google Fonts @import must be first line in index.css, before Tailwind @imports, or PostCSS throws
+- [Multi-tenant architecture](multi-tenant.md) — tenantId column on 9 tables, tenantResolver middleware, tenantWhere/withTenantId helpers, admin routes, default tenant in companies table
+- [Zod version conflict](zod-version-conflict.md) — lib/db schemas mix zod v3 and zod/v4; drizzle-zod needs v3; causes tsc typecheck failure but esbuild build works fine

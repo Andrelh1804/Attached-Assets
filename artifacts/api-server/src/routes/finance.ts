@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { db, transactionsTable } from "@workspace/db";
-import { eq, ilike, sql } from "drizzle-orm";
+import { eq, ilike, and, sql } from "drizzle-orm";
 import { GetTransactionsQueryParams, CreateTransactionBody } from "@workspace/api-zod";
+import { tenantWhere, withTenantId } from "../lib/tenant";
 
 const router = Router();
 
-router.get("/finance/overview", async (_req, res) => {
+router.get("/finance/overview", async (req, res) => {
   try {
-    const all = await db.select().from(transactionsTable);
+    const all = await db.select().from(transactionsTable).where(tenantWhere(transactionsTable.tenantId, req));
     const revenue = all.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0);
     const expenses = all.filter(t => t.type === "expense").reduce((s, t) => s + t.amount, 0);
     const profit = revenue - expenses;
@@ -30,9 +31,11 @@ router.get("/finance/overview", async (_req, res) => {
 router.get("/finance/transactions", async (req, res) => {
   try {
     const { type, search } = GetTransactionsQueryParams.parse(req.query);
+    const tc = tenantWhere(transactionsTable.tenantId, req);
     let q = db.select().from(transactionsTable).$dynamic();
-    if (type) q = q.where(eq(transactionsTable.type, type));
-    else if (search) q = q.where(ilike(transactionsTable.description, `%${search}%`));
+    if (type) q = q.where(and(tc, eq(transactionsTable.type, type)));
+    else if (search) q = q.where(and(tc, ilike(transactionsTable.description, `%${search}%`)));
+    else q = q.where(tc);
     const txns = await q.orderBy(sql`date desc`);
     res.json(txns.map(t => ({ ...t, createdAt: t.createdAt.toISOString() })));
   } catch (err) {
@@ -44,7 +47,7 @@ router.get("/finance/transactions", async (req, res) => {
 router.post("/finance/transactions", async (req, res) => {
   try {
     const data = CreateTransactionBody.parse(req.body);
-    const [txn] = await db.insert(transactionsTable).values(data).returning();
+    const [txn] = await db.insert(transactionsTable).values(withTenantId(data, req)).returning();
     res.status(201).json({ ...txn, createdAt: txn.createdAt.toISOString() });
   } catch (err) {
     req.log.error({ err });

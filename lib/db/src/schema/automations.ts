@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 
 export const automationsTable = pgTable("automations", {
   id: serial("id").primaryKey(),
+  tenantId: text("tenant_id").notNull().default("default"),
   name: text("name").notNull(),
   description: text("description"),
   trigger: text("trigger").notNull(),
@@ -13,6 +14,6 @@ export const automationsTable = pgTable("automations", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const insertAutomationSchema = createInsertSchema(automationsTable).omit({ id: true, createdAt: true });
+export const insertAutomationSchema = createInsertSchema(automationsTable).omit({ id: true, createdAt: true, tenantId: true });
 export type InsertAutomation = z.infer<typeof insertAutomationSchema>;
 export type Automation = typeof automationsTable.$inferSelect;

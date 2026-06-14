@@ -6,6 +6,7 @@ import router from "./routes";
 import { logger } from "./lib/logger";
 import { WebhookHandlers } from "./webhookHandlers";
 import { authMiddleware } from "./middlewares/authMiddleware";
+import { tenantResolver } from "./middlewares/tenantResolver";
 
 const app: Express = express();
 
@@ -53,6 +54,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(authMiddleware);
+app.use(tenantResolver);
 
 app.use("/api", router);
 

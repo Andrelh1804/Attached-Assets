@@ -15,6 +15,7 @@ import stripeRouter from "./stripe";
 import contractsRouter from "./contracts";
 import customerSuccessRouter from "./customer-success";
 import businessHealthRouter from "./business-health";
+import adminRouter from "./admin";
 
 const router: IRouter = Router();
 
@@ -34,5 +35,6 @@ router.use(aiRouter);
 router.use(gamificationRouter);
 router.use(automationsRouter);
 router.use(stripeRouter);
+router.use(adminRouter);
 
 export default router;

@@ -13,3 +13,5 @@ export * from "./omnichannel";
 export * from "./contracts";
 export * from "./customer_success";
 export * from "./business_health";
+export * from "./companies";
+export * from "./tenant_settings";

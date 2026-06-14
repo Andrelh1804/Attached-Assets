@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 
 export const workOrdersTable = pgTable("work_orders", {
   id: serial("id").primaryKey(),
+  tenantId: text("tenant_id").notNull().default("default"),
   title: text("title").notNull(),
   description: text("description"),
   status: text("status").notNull().default("pending"),
@@ -19,6 +20,6 @@ export const workOrdersTable = pgTable("work_orders", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const insertWorkOrderSchema = createInsertSchema(workOrdersTable).omit({ id: true, createdAt: true });
+export const insertWorkOrderSchema = createInsertSchema(workOrdersTable).omit({ id: true, createdAt: true, tenantId: true });
 export type InsertWorkOrder = z.infer<typeof insertWorkOrderSchema>;
 export type WorkOrder = typeof workOrdersTable.$inferSelect;

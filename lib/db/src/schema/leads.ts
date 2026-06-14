@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 
 export const leadsTable = pgTable("leads", {
   id: serial("id").primaryKey(),
+  tenantId: text("tenant_id").notNull().default("default"),
   name: text("name").notNull(),
   email: text("email").notNull(),
   phone: text("phone"),
@@ -17,6 +18,6 @@ export const leadsTable = pgTable("leads", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });
 
-export const insertLeadSchema = createInsertSchema(leadsTable).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertLeadSchema = createInsertSchema(leadsTable).omit({ id: true, createdAt: true, updatedAt: true, tenantId: true });
 export type InsertLead = z.infer<typeof insertLeadSchema>;
 export type Lead = typeof leadsTable.$inferSelect;

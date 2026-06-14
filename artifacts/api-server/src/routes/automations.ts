@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { db, automationsTable } from "@workspace/db";
-import { eq, sql } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import { CreateAutomationBody, UpdateAutomationBody } from "@workspace/api-zod";
+import { tenantWhere, withTenantId } from "../lib/tenant";
 
 const router = Router();
 
-router.get("/automations", async (_req, res) => {
+router.get("/automations", async (req, res) => {
   try {
-    const autos = await db.select().from(automationsTable).orderBy(sql`created_at desc`);
+    const autos = await db.select().from(automationsTable).where(tenantWhere(automationsTable.tenantId, req)).orderBy(sql`created_at desc`);
     res.json(autos.map(a => ({ ...a, lastExecutedAt: a.lastExecutedAt?.toISOString() ?? null, createdAt: a.createdAt.toISOString() })));
   } catch (err) {
     req.log.error({ err });
@@ -18,7 +19,7 @@ router.get("/automations", async (_req, res) => {
 router.post("/automations", async (req, res) => {
   try {
     const data = CreateAutomationBody.parse(req.body);
-    const [auto] = await db.insert(automationsTable).values(data).returning();
+    const [auto] = await db.insert(automationsTable).values(withTenantId(data, req)).returning();
     res.status(201).json({ ...auto, lastExecutedAt: null, createdAt: auto.createdAt.toISOString() });
   } catch (err) {
     req.log.error({ err });
@@ -30,7 +31,7 @@ router.patch("/automations/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const data = UpdateAutomationBody.parse(req.body);
-    const [auto] = await db.update(automationsTable).set(data).where(eq(automationsTable.id, id)).returning();
+    const [auto] = await db.update(automationsTable).set(data).where(and(tenantWhere(automationsTable.tenantId, req), eq(automationsTable.id, id))).returning();
     if (!auto) return res.status(404).json({ error: "Not found" });
     res.json({ ...auto, lastExecutedAt: auto.lastExecutedAt?.toISOString() ?? null, createdAt: auto.createdAt.toISOString() });
   } catch (err) {
@@ -42,7 +43,7 @@ router.patch("/automations/:id", async (req, res) => {
 router.delete("/automations/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    await db.delete(automationsTable).where(eq(automationsTable.id, id));
+    await db.delete(automationsTable).where(and(tenantWhere(automationsTable.tenantId, req), eq(automationsTable.id, id)));
     res.status(204).send();
   } catch (err) {
     req.log.error({ err });

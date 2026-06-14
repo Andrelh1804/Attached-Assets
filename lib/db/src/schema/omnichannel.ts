@@ -2,6 +2,7 @@ import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 export const conversationsTable = pgTable("omni_conversations", {
   id: serial("id").primaryKey(),
+  tenantId: text("tenant_id").notNull().default("default"),
   channel: text("channel").notNull().default("whatsapp"),
   customerName: text("customer_name").notNull(),
   customerAvatar: text("customer_avatar"),
