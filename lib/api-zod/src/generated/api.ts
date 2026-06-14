@@ -31,6 +31,250 @@ export const HealthCheckResponse = zod.object({
 
 
 /**
+ * @summary Get full Business Health Score™ with all dimensions
+ */
+export const GetBusinessHealthScoreResponse = zod.object({
+  "score": zod.number(),
+  "classification": zod.string(),
+  "dimensions": zod.record(zod.string(), zod.object({
+  "score": zod.number(),
+  "weight": zod.number(),
+  "label": zod.string(),
+  "trend": zod.string()
+})),
+  "computed": zod.object({
+  "conversionRate": zod.number().nullish(),
+  "slaCompliance": zod.number().nullish(),
+  "revenueGrowth": zod.number().nullish(),
+  "avgProductivity": zod.number().nullish(),
+  "npsAvg": zod.number().nullish(),
+  "mrrTotal": zod.number().nullish(),
+  "churnRiskScore": zod.number().nullish()
+}),
+  "snapshotAt": zod.string()
+})
+
+
+/**
+ * @summary Get historical BHS over time
+ */
+export const GetBusinessHealthHistoryResponseItem = zod.object({
+  "label": zod.string(),
+  "value": zod.number(),
+  "secondary": zod.number().nullish()
+})
+export const GetBusinessHealthHistoryResponse = zod.array(GetBusinessHealthHistoryResponseItem)
+
+
+/**
+ * @summary List contracts
+ */
+export const GetContractsQueryParams = zod.object({
+  "status": zod.coerce.string().nullish()
+})
+
+export const GetContractsResponseItem = zod.object({
+  "id": zod.number(),
+  "clientName": zod.string(),
+  "clientEmail": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "mrr": zod.number(),
+  "totalValue": zod.number(),
+  "startDate": zod.string(),
+  "endDate": zod.string(),
+  "autoRenew": zod.boolean(),
+  "notes": zod.string().nullish(),
+  "daysUntilRenewal": zod.number().nullish(),
+  "createdAt": zod.string()
+})
+export const GetContractsResponse = zod.array(GetContractsResponseItem)
+
+
+/**
+ * @summary Create contract
+ */
+export const CreateContractBody = zod.object({
+  "clientName": zod.string(),
+  "clientEmail": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string().nullish(),
+  "mrr": zod.number().nullish(),
+  "totalValue": zod.number().nullish(),
+  "startDate": zod.string(),
+  "endDate": zod.string(),
+  "autoRenew": zod.boolean().nullish(),
+  "notes": zod.string().nullish()
+})
+
+
+/**
+ * @summary Contracts summary KPIs
+ */
+export const GetContractsSummaryResponse = zod.object({
+  "total": zod.number(),
+  "active": zod.number(),
+  "expiringSoon": zod.number(),
+  "mrrTotal": zod.number(),
+  "arrTotal": zod.number(),
+  "renewalRate": zod.number()
+})
+
+
+/**
+ * @summary Get contract by id
+ */
+export const GetContractParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetContractResponse = zod.object({
+  "id": zod.number(),
+  "clientName": zod.string(),
+  "clientEmail": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "mrr": zod.number(),
+  "totalValue": zod.number(),
+  "startDate": zod.string(),
+  "endDate": zod.string(),
+  "autoRenew": zod.boolean(),
+  "notes": zod.string().nullish(),
+  "daysUntilRenewal": zod.number().nullish(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update contract
+ */
+export const UpdateContractParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateContractBody = zod.object({
+  "clientName": zod.string(),
+  "clientEmail": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string().nullish(),
+  "mrr": zod.number().nullish(),
+  "totalValue": zod.number().nullish(),
+  "startDate": zod.string(),
+  "endDate": zod.string(),
+  "autoRenew": zod.boolean().nullish(),
+  "notes": zod.string().nullish()
+})
+
+export const UpdateContractResponse = zod.object({
+  "id": zod.number(),
+  "clientName": zod.string(),
+  "clientEmail": zod.string().nullish(),
+  "description": zod.string().nullish(),
+  "status": zod.string(),
+  "mrr": zod.number(),
+  "totalValue": zod.number(),
+  "startDate": zod.string(),
+  "endDate": zod.string(),
+  "autoRenew": zod.boolean(),
+  "notes": zod.string().nullish(),
+  "daysUntilRenewal": zod.number().nullish(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete contract
+ */
+export const DeleteContractParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+/**
+ * @summary Get NPS responses and summary
+ */
+export const GetNpsDataResponse = zod.object({
+  "responses": zod.array(zod.object({
+  "id": zod.number(),
+  "clientName": zod.string(),
+  "clientEmail": zod.string(),
+  "score": zod.number(),
+  "comment": zod.string().nullish(),
+  "category": zod.string().nullish(),
+  "createdAt": zod.string()
+})),
+  "summary": zod.object({
+  "npsScore": zod.number(),
+  "promoters": zod.number(),
+  "neutrals": zod.number(),
+  "detractors": zod.number(),
+  "total": zod.number()
+})
+})
+
+
+/**
+ * @summary Submit NPS response
+ */
+export const CreateNpsResponseBody = zod.object({
+  "clientName": zod.string(),
+  "clientEmail": zod.string(),
+  "score": zod.number(),
+  "comment": zod.string().nullish(),
+  "category": zod.string().nullish()
+})
+
+
+/**
+ * @summary List clients with health scores
+ */
+export const GetClientHealthScoresResponseItem = zod.object({
+  "id": zod.number(),
+  "clientName": zod.string(),
+  "clientEmail": zod.string(),
+  "healthScore": zod.number(),
+  "npsScore": zod.number().nullish(),
+  "supportScore": zod.number().nullish(),
+  "engagementScore": zod.number().nullish(),
+  "paymentScore": zod.number().nullish(),
+  "churnRisk": zod.string(),
+  "lastContactAt": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "createdAt": zod.string()
+})
+export const GetClientHealthScoresResponse = zod.array(GetClientHealthScoresResponseItem)
+
+
+/**
+ * @summary Get clients at churn risk
+ */
+export const GetChurnRiskResponseItem = zod.object({
+  "clientName": zod.string(),
+  "clientEmail": zod.string(),
+  "healthScore": zod.number(),
+  "churnRisk": zod.string(),
+  "reason": zod.string(),
+  "recommendedAction": zod.string(),
+  "daysWithoutContact": zod.number()
+})
+export const GetChurnRiskResponse = zod.array(GetChurnRiskResponseItem)
+
+
+/**
+ * @summary Customer Success KPI summary
+ */
+export const GetCustomerSuccessSummaryResponse = zod.object({
+  "avgHealthScore": zod.number(),
+  "clientsAtRisk": zod.number(),
+  "clientsMediumRisk": zod.number(),
+  "clientsHealthy": zod.number(),
+  "npsScore": zod.number(),
+  "csatScore": zod.number(),
+  "churnRateMonth": zod.number()
+})
+
+
+/**
  * @summary Get live dashboard metrics
  */
 export const GetDashboardMetricsResponse = zod.object({

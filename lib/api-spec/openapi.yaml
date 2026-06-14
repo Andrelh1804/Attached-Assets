@@ -10,6 +10,9 @@ tags:
   - name: health
   - name: auth
   - name: dashboard
+  - name: business-health
+  - name: contracts
+  - name: customer-success
   - name: crm
   - name: tickets
   - name: hr
@@ -64,6 +67,215 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # Business Health Score
+  /business-health/score:
+    get:
+      operationId: getBusinessHealthScore
+      tags: [business-health]
+      summary: Get full Business Health Score™ with all dimensions
+      responses:
+        "200":
+          description: Business Health Score
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BusinessHealthScore"
+
+  /business-health/history:
+    get:
+      operationId: getBusinessHealthHistory
+      tags: [business-health]
+      summary: Get historical BHS over time
+      responses:
+        "200":
+          description: History
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChartPoint"
+
+  # Contracts
+  /contracts:
+    get:
+      operationId: getContracts
+      tags: [contracts]
+      summary: List contracts
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: ["string", "null"]
+      responses:
+        "200":
+          description: Contracts list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contract"
+    post:
+      operationId: createContract
+      tags: [contracts]
+      summary: Create contract
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+
+  /contracts/summary:
+    get:
+      operationId: getContractsSummary
+      tags: [contracts]
+      summary: Contracts summary KPIs
+      responses:
+        "200":
+          description: Summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractsSummary"
+
+  /contracts/{id}:
+    get:
+      operationId: getContract
+      tags: [contracts]
+      summary: Get contract by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+    patch:
+      operationId: updateContract
+      tags: [contracts]
+      summary: Update contract
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractInput"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+    delete:
+      operationId: deleteContract
+      tags: [contracts]
+      summary: Delete contract
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # Customer Success
+  /customer-success/nps:
+    get:
+      operationId: getNpsData
+      tags: [customer-success]
+      summary: Get NPS responses and summary
+      responses:
+        "200":
+          description: NPS data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NpsData"
+    post:
+      operationId: createNpsResponse
+      tags: [customer-success]
+      summary: Submit NPS response
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NpsInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NpsResponse"
+
+  /customer-success/clients:
+    get:
+      operationId: getClientHealthScores
+      tags: [customer-success]
+      summary: List clients with health scores
+      responses:
+        "200":
+          description: Clients health
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClientHealth"
+
+  /customer-success/churn-risk:
+    get:
+      operationId: getChurnRisk
+      tags: [customer-success]
+      summary: Get clients at churn risk
+      responses:
+        "200":
+          description: Churn risk clients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChurnRiskClient"
+
+  /customer-success/summary:
+    get:
+      operationId: getCustomerSuccessSummary
+      tags: [customer-success]
+      summary: Customer Success KPI summary
+      responses:
+        "200":
+          description: Summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerSuccessSummary"
 
   # Dashboard
   /dashboard/metrics:
@@ -1526,6 +1738,257 @@ components:
           type: string
         status:
           type: string
+
+    # Business Health Score
+    BusinessHealthScore:
+      type: object
+      required: [score, classification, dimensions, computed, snapshotAt]
+      properties:
+        score:
+          type: number
+        classification:
+          type: string
+        dimensions:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/BhsDimension"
+        computed:
+          $ref: "#/components/schemas/BhsComputed"
+        snapshotAt:
+          type: string
+
+    BhsDimension:
+      type: object
+      required: [score, weight, label, trend]
+      properties:
+        score:
+          type: number
+        weight:
+          type: number
+        label:
+          type: string
+        trend:
+          type: string
+
+    BhsComputed:
+      type: object
+      properties:
+        conversionRate:
+          type: ["number", "null"]
+        slaCompliance:
+          type: ["number", "null"]
+        revenueGrowth:
+          type: ["number", "null"]
+        avgProductivity:
+          type: ["number", "null"]
+        npsAvg:
+          type: ["number", "null"]
+        mrrTotal:
+          type: ["number", "null"]
+        churnRiskScore:
+          type: ["number", "null"]
+
+    # Contracts
+    Contract:
+      type: object
+      required: [id, clientName, status, mrr, totalValue, startDate, endDate, autoRenew, createdAt]
+      properties:
+        id:
+          type: integer
+        clientName:
+          type: string
+        clientEmail:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        status:
+          type: string
+        mrr:
+          type: number
+        totalValue:
+          type: number
+        startDate:
+          type: string
+        endDate:
+          type: string
+        autoRenew:
+          type: boolean
+        notes:
+          type: ["string", "null"]
+        daysUntilRenewal:
+          type: ["integer", "null"]
+        createdAt:
+          type: string
+
+    ContractInput:
+      type: object
+      required: [clientName, startDate, endDate]
+      properties:
+        clientName:
+          type: string
+        clientEmail:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        status:
+          type: ["string", "null"]
+        mrr:
+          type: ["number", "null"]
+        totalValue:
+          type: ["number", "null"]
+        startDate:
+          type: string
+        endDate:
+          type: string
+        autoRenew:
+          type: ["boolean", "null"]
+        notes:
+          type: ["string", "null"]
+
+    ContractsSummary:
+      type: object
+      required: [total, active, expiringSoon, mrrTotal, arrTotal, renewalRate]
+      properties:
+        total:
+          type: integer
+        active:
+          type: integer
+        expiringSoon:
+          type: integer
+        mrrTotal:
+          type: number
+        arrTotal:
+          type: number
+        renewalRate:
+          type: number
+
+    # Customer Success
+    NpsResponse:
+      type: object
+      required: [id, clientName, clientEmail, score, createdAt]
+      properties:
+        id:
+          type: integer
+        clientName:
+          type: string
+        clientEmail:
+          type: string
+        score:
+          type: integer
+        comment:
+          type: ["string", "null"]
+        category:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    NpsInput:
+      type: object
+      required: [clientName, clientEmail, score]
+      properties:
+        clientName:
+          type: string
+        clientEmail:
+          type: string
+        score:
+          type: integer
+        comment:
+          type: ["string", "null"]
+        category:
+          type: ["string", "null"]
+
+    NpsSummary:
+      type: object
+      required: [npsScore, promoters, neutrals, detractors, total]
+      properties:
+        npsScore:
+          type: integer
+        promoters:
+          type: integer
+        neutrals:
+          type: integer
+        detractors:
+          type: integer
+        total:
+          type: integer
+
+    NpsData:
+      type: object
+      required: [responses, summary]
+      properties:
+        responses:
+          type: array
+          items:
+            $ref: "#/components/schemas/NpsResponse"
+        summary:
+          $ref: "#/components/schemas/NpsSummary"
+
+    ClientHealth:
+      type: object
+      required: [id, clientName, clientEmail, healthScore, churnRisk, createdAt]
+      properties:
+        id:
+          type: integer
+        clientName:
+          type: string
+        clientEmail:
+          type: string
+        healthScore:
+          type: number
+        npsScore:
+          type: ["number", "null"]
+        supportScore:
+          type: ["number", "null"]
+        engagementScore:
+          type: ["number", "null"]
+        paymentScore:
+          type: ["number", "null"]
+        churnRisk:
+          type: string
+        lastContactAt:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    ChurnRiskClient:
+      type: object
+      required: [clientName, clientEmail, healthScore, churnRisk, reason, recommendedAction, daysWithoutContact]
+      properties:
+        clientName:
+          type: string
+        clientEmail:
+          type: string
+        healthScore:
+          type: number
+        churnRisk:
+          type: string
+        reason:
+          type: string
+        recommendedAction:
+          type: string
+        daysWithoutContact:
+          type: integer
+
+    CustomerSuccessSummary:
+      type: object
+      required: [avgHealthScore, clientsAtRisk, clientsMediumRisk, clientsHealthy, npsScore, csatScore, churnRateMonth]
+      properties:
+        avgHealthScore:
+          type: number
+        clientsAtRisk:
+          type: integer
+        clientsMediumRisk:
+          type: integer
+        clientsHealthy:
+          type: integer
+        npsScore:
+          type: number
+        csatScore:
+          type: number
+        churnRateMonth:
+          type: number
 
     AuthUser:
       type: object

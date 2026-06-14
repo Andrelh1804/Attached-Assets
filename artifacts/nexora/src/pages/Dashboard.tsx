@@ -102,7 +102,7 @@ export default function Dashboard() {
           sub={`${metrics?.openTickets ?? 0} chamados ativos gerando proteção`}
           icon={FileText}
           color="#2563EB"
-          href="/app/tickets"
+          href="/app/contracts"
         />
         <MetricCard
           label="Produtividade da Equipe"
@@ -161,7 +161,12 @@ export default function Dashboard() {
 
         {/* Health Score */}
         <div className="nexora-card p-5">
-          <p className="text-white font-semibold mb-1">Saúde Empresarial</p>
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-white font-semibold">Saúde Empresarial</p>
+            <Link href="/app/health-score">
+              <button className="text-blue-400 text-xs hover:text-blue-300 flex items-center gap-1">Detalhes <ChevronRight size={12} /></button>
+            </Link>
+          </div>
           <p className="text-slate-500 text-xs mb-4">Pontuacao 0-100</p>
           <HealthGauge value={health?.score ?? 82} />
           <div className="mt-4 space-y-2.5">

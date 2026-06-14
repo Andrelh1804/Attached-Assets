@@ -16,6 +16,9 @@ import AiPage from "@/pages/AiPage";
 import GamificationPage from "@/pages/GamificationPage";
 import AutomationsPage from "@/pages/AutomationsPage";
 import PricingPage from "@/pages/PricingPage";
+import BusinessHealthPage from "@/pages/BusinessHealthPage";
+import CustomerSuccessPage from "@/pages/CustomerSuccessPage";
+import ContractsPage from "@/pages/ContractsPage";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
@@ -28,6 +31,15 @@ function Router() {
       <Route path="/pricing" component={PricingPage} />
       <Route path="/app/dashboard">
         <AppLayout><Dashboard /></AppLayout>
+      </Route>
+      <Route path="/app/health-score">
+        <AppLayout><BusinessHealthPage /></AppLayout>
+      </Route>
+      <Route path="/app/customer-success">
+        <AppLayout><CustomerSuccessPage /></AppLayout>
+      </Route>
+      <Route path="/app/contracts">
+        <AppLayout><ContractsPage /></AppLayout>
       </Route>
       <Route path="/app/crm">
         <AppLayout><CrmPage /></AppLayout>

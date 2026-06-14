@@ -12,12 +12,18 @@ import aiRouter from "./ai";
 import gamificationRouter from "./gamification";
 import automationsRouter from "./automations";
 import stripeRouter from "./stripe";
+import contractsRouter from "./contracts";
+import customerSuccessRouter from "./customer-success";
+import businessHealthRouter from "./business-health";
 
 const router: IRouter = Router();
 
 router.use(authRouter);
 router.use(healthRouter);
 router.use(dashboardRouter);
+router.use(businessHealthRouter);
+router.use(contractsRouter);
+router.use(customerSuccessRouter);
 router.use(crmRouter);
 router.use(ticketsRouter);
 router.use(hrRouter);

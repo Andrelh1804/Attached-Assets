@@ -120,6 +120,36 @@ const MODULES = [
     color: "#f59e0b",
   },
   {
+    name: "Business Health Score™",
+    icon: "🧬",
+    percent: 95,
+    status: "concluído",
+    features: ["Motor BHS proprietário", "6 dimensões ponderadas", "Score 0-100 ao vivo", "KPIs: NPS, MRR, SLA, Churn, Crescimento, Produtividade"],
+    pending: ["Histórico de evolução do score"],
+    lines: 290,
+    color: "#22c55e",
+  },
+  {
+    name: "Customer Success",
+    icon: "💚",
+    percent: 90,
+    status: "concluído",
+    features: ["Health Score por cliente", "NPS tracking (Promotores/Detratores)", "Risco de Churn por cliente", "Recomendações de ação"],
+    pending: ["Envio automático de pesquisa NPS"],
+    lines: 270,
+    color: "#22c55e",
+  },
+  {
+    name: "Contratos",
+    icon: "📋",
+    percent: 90,
+    status: "concluído",
+    features: ["CRUD completo de contratos", "MRR / ARR por contrato", "Alerta de vencimento", "Taxa de renovação", "Filtro por status"],
+    pending: ["Assinatura digital (DocuSign)"],
+    lines: 250,
+    color: "#22c55e",
+  },
+  {
     name: "Autenticação",
     icon: "🔐",
     percent: 30,
@@ -142,12 +172,12 @@ const MODULES = [
 ];
 
 const TECH_STATS = [
-  { label: "Páginas Frontend", value: 12, icon: "🖥️", detail: "Landing, Pricing, Dashboard, CRM, Tickets, FieldService, HR, Finance, Omnichannel, AI, Gamification, Automations" },
-  { label: "Endpoints API", value: 42, icon: "🔌", detail: "Health, Dashboard (4), CRM (8), Tickets (5), HR (4), Finance (3), FieldService (4), Omnichannel (3), AI (2), Gamification (1), Automations (4), Stripe (4)" },
-  { label: "Tabelas no Banco", value: 11, icon: "🗄️", detail: "users, leads, contacts, tickets, employees, transactions, work_orders, technicians, conversations, automations + messages" },
-  { label: "Componentes UI", value: 55, icon: "🎨", detail: "Accordion, Alert, Avatar, Badge, Button, Calendar, Card, Chart, Checkbox, Dialog, Drawer, Form, Input, Select, Table, Tabs, Tooltip e mais 38..." },
-  { label: "Linhas de OpenAPI", value: 1496, icon: "📋", detail: "Spec completa com 42 operationIds, schemas tipados, parâmetros de query, path params, request bodies e responses" },
-  { label: "Linhas de Código", value: 5344, icon: "💻", detail: "Frontend: ~2748 linhas | Backend: ~875 linhas | DB Schema: ~203 linhas | OpenAPI: ~1496 linhas | Scripts: ~22 linhas" },
+  { label: "Páginas Frontend", value: 15, icon: "🖥️", detail: "Landing, Pricing, Dashboard, CRM, Tickets, FieldService, HR, Finance, Omnichannel, AI, Gamification, Automations, BusinessHealth, CustomerSuccess, Contratos" },
+  { label: "Endpoints API", value: 56, icon: "🔌", detail: "Health, Dashboard (4), CRM (8), Tickets (5), HR (4), Finance (3), FieldService (4), Omnichannel (3), AI (2), Gamification (1), Automations (4), Stripe (4), BHS (1), CustomerSuccess (4), Contracts (5)" },
+  { label: "Tabelas no Banco", value: 14, icon: "🗄️", detail: "users, leads, contacts, tickets, employees, transactions, work_orders, technicians, conversations, automations, messages, contracts, nps_responses, client_health_scores" },
+  { label: "Componentes UI", value: 58, icon: "🎨", detail: "Accordion, Alert, Avatar, Badge, Button, Calendar, Card, Chart, Checkbox, Dialog, Drawer, Form, Input, Select, Table, Tabs, Tooltip e mais 41..." },
+  { label: "Linhas de OpenAPI", value: 1890, icon: "📋", detail: "Spec completa com 56 operationIds, schemas tipados — inclui BHS™, CustomerSuccess, Contracts com todos os schemas e parâmetros" },
+  { label: "Linhas de Código", value: 6654, icon: "💻", detail: "Frontend: ~3558 linhas | Backend: ~1185 linhas | DB Schema: ~293 linhas | OpenAPI: ~1890 linhas | Scripts: ~22 linhas" },
 ];
 
 const BACKEND_MODULES = [
@@ -163,6 +193,9 @@ const BACKEND_MODULES = [
   { name: "automations.ts", endpoints: 4, lines: 53, status: "✅" },
   { name: "stripe.ts", endpoints: 4, lines: 103, status: "✅" },
   { name: "health.ts", endpoints: 1, lines: 11, status: "✅" },
+  { name: "business-health.ts", endpoints: 1, lines: 95, status: "✅" },
+  { name: "customer-success.ts", endpoints: 4, lines: 110, status: "✅" },
+  { name: "contracts.ts", endpoints: 5, lines: 95, status: "✅" },
 ];
 
 const DB_TABLES = [
@@ -176,7 +209,10 @@ const DB_TABLES = [
   { name: "conversations", fields: 8, lines: 32 },
   { name: "automations", fields: 7, lines: 18 },
   { name: "users", fields: 4, lines: 11 },
-  { name: "contacts (messages)", fields: 5, lines: 18 },
+  { name: "messages", fields: 5, lines: 18 },
+  { name: "contracts", fields: 12, lines: 28 },
+  { name: "nps_responses", fields: 7, lines: 22 },
+  { name: "client_health_scores", fields: 10, lines: 30 },
 ];
 
 function AnimatedNumber({ target, suffix = "" }: { target: number; suffix?: string }) {

@@ -10,3 +10,5 @@ export * from "./automations";
 export * from "./users";
 export * from "./auth";
 export * from "./omnichannel";
+export * from "./contracts";
+export * from "./customer_success";

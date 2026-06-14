@@ -4,14 +4,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Users, Ticket, Wrench, UserSquare2, DollarSign,
   MessageSquare, Brain, Trophy, Zap, Settings, ChevronRight, Bell,
-  Search, X, Send, Sparkles, LogOut, Menu
+  Search, X, Send, Sparkles, LogOut, Menu, Activity, Heart, FileText
 } from "lucide-react";
 import { useChatWithAi } from "@workspace/api-client-react";
 import { useAuth } from "@workspace/replit-auth-web";
 
 const navSections = [
   { section: "Principal", items: [{ path: "/app/dashboard", label: "Dashboard", icon: LayoutDashboard }] },
-  { section: "CRM", items: [{ path: "/app/crm", label: "CRM & Pipeline", icon: Users }] },
+  { section: "Inteligencia", items: [
+    { path: "/app/health-score", label: "Business Health Score", icon: Activity },
+    { path: "/app/customer-success", label: "Customer Success", icon: Heart },
+    { path: "/app/contracts", label: "Contratos", icon: FileText },
+  ]},
+  { section: "Comercial", items: [{ path: "/app/crm", label: "CRM & Pipeline", icon: Users }] },
   { section: "Suporte", items: [
     { path: "/app/tickets", label: "Mesa de Servico", icon: Ticket },
     { path: "/app/field-service", label: "Field Service", icon: Wrench },

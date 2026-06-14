@@ -432,6 +432,165 @@ export interface AutomationUpdate {
   status?: string;
 }
 
+export interface BhsDimension {
+  score: number;
+  weight: number;
+  label: string;
+  trend: string;
+}
+
+export type BusinessHealthScoreDimensions = {[key: string]: BhsDimension};
+
+export interface BhsComputed {
+  /** @nullable */
+  conversionRate?: number | null;
+  /** @nullable */
+  slaCompliance?: number | null;
+  /** @nullable */
+  revenueGrowth?: number | null;
+  /** @nullable */
+  avgProductivity?: number | null;
+  /** @nullable */
+  npsAvg?: number | null;
+  /** @nullable */
+  mrrTotal?: number | null;
+  /** @nullable */
+  churnRiskScore?: number | null;
+}
+
+export interface BusinessHealthScore {
+  score: number;
+  classification: string;
+  dimensions: BusinessHealthScoreDimensions;
+  computed: BhsComputed;
+  snapshotAt: string;
+}
+
+export interface Contract {
+  id: number;
+  clientName: string;
+  /** @nullable */
+  clientEmail?: string | null;
+  /** @nullable */
+  description?: string | null;
+  status: string;
+  mrr: number;
+  totalValue: number;
+  startDate: string;
+  endDate: string;
+  autoRenew: boolean;
+  /** @nullable */
+  notes?: string | null;
+  /** @nullable */
+  daysUntilRenewal?: number | null;
+  createdAt: string;
+}
+
+export interface ContractInput {
+  clientName: string;
+  /** @nullable */
+  clientEmail?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  status?: string | null;
+  /** @nullable */
+  mrr?: number | null;
+  /** @nullable */
+  totalValue?: number | null;
+  startDate: string;
+  endDate: string;
+  /** @nullable */
+  autoRenew?: boolean | null;
+  /** @nullable */
+  notes?: string | null;
+}
+
+export interface ContractsSummary {
+  total: number;
+  active: number;
+  expiringSoon: number;
+  mrrTotal: number;
+  arrTotal: number;
+  renewalRate: number;
+}
+
+export interface NpsResponse {
+  id: number;
+  clientName: string;
+  clientEmail: string;
+  score: number;
+  /** @nullable */
+  comment?: string | null;
+  /** @nullable */
+  category?: string | null;
+  createdAt: string;
+}
+
+export interface NpsInput {
+  clientName: string;
+  clientEmail: string;
+  score: number;
+  /** @nullable */
+  comment?: string | null;
+  /** @nullable */
+  category?: string | null;
+}
+
+export interface NpsSummary {
+  npsScore: number;
+  promoters: number;
+  neutrals: number;
+  detractors: number;
+  total: number;
+}
+
+export interface NpsData {
+  responses: NpsResponse[];
+  summary: NpsSummary;
+}
+
+export interface ClientHealth {
+  id: number;
+  clientName: string;
+  clientEmail: string;
+  healthScore: number;
+  /** @nullable */
+  npsScore?: number | null;
+  /** @nullable */
+  supportScore?: number | null;
+  /** @nullable */
+  engagementScore?: number | null;
+  /** @nullable */
+  paymentScore?: number | null;
+  churnRisk: string;
+  /** @nullable */
+  lastContactAt?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  createdAt: string;
+}
+
+export interface ChurnRiskClient {
+  clientName: string;
+  clientEmail: string;
+  healthScore: number;
+  churnRisk: string;
+  reason: string;
+  recommendedAction: string;
+  daysWithoutContact: number;
+}
+
+export interface CustomerSuccessSummary {
+  avgHealthScore: number;
+  clientsAtRisk: number;
+  clientsMediumRisk: number;
+  clientsHealthy: number;
+  npsScore: number;
+  csatScore: number;
+  churnRateMonth: number;
+}
+
 export interface AuthUser {
   id: string;
   /** @nullable */
@@ -447,6 +606,13 @@ export interface AuthUser {
 export interface AuthUserEnvelope {
   user: AuthUser | null;
 }
+
+export type GetContractsParams = {
+/**
+ * @nullable
+ */
+status?: string | null;
+};
 
 export type GetLeadsParams = {
 /**
