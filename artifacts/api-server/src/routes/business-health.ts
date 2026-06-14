@@ -154,12 +154,26 @@ router.get("/business-health/score", async (req, res) => {
 });
 
 router.get("/business-health/history", async (_req, res) => {
+  try {
+    const { bhsSnapshotsTable } = await import("@workspace/db");
+    const rows = await db.select().from(bhsSnapshotsTable).orderBy(sql`created_at asc`).limit(30);
+
+    if (rows.length >= 2) {
+      const history = rows.map(r => ({
+        label: new Date(r.createdAt).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }),
+        value: r.score,
+        secondary: r.score * 0.92,
+      }));
+      return res.json(history);
+    }
+  } catch {}
+
   const weeks = ["S-8", "S-7", "S-6", "S-5", "S-4", "S-3", "S-2", "S-1", "Atual"];
   const base = 68;
-  const history = weeks.map((label, i) => ({
-    label,
-    score: Math.min(100, Math.max(30, base + (i * 2.2) + (Math.random() * 6 - 3))),
-  }));
+  const history = weeks.map((label, i) => {
+    const value = Math.min(100, Math.max(30, base + (i * 2.2)));
+    return { label, value, secondary: Math.round(value * 0.92) };
+  });
   res.json(history);
 });
 

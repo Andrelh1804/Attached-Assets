@@ -2,9 +2,11 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText, Plus, X, AlertTriangle, CheckCircle, Clock, XCircle,
-  RefreshCw, TrendingUp, DollarSign, Calendar
+  RefreshCw, TrendingUp, DollarSign, Calendar, Pencil
 } from "lucide-react";
-import { useGetContracts, useGetContractsSummary, useCreateContract } from "@workspace/api-client-react";
+import {
+  useGetContracts, useGetContractsSummary, useCreateContract, useUpdateContract, useDeleteContract
+} from "@workspace/api-client-react";
 
 const statusConfig = {
   active: { label: "Ativo", color: "#10B981", bg: "rgba(16,185,129,0.1)", icon: CheckCircle },
@@ -13,10 +15,31 @@ const statusConfig = {
   cancelled: { label: "Cancelado", color: "#64748B", bg: "rgba(100,116,139,0.1)", icon: X },
 };
 
+type ContractFormData = {
+  clientName: string;
+  clientEmail: string;
+  description: string;
+  mrr: string;
+  totalValue: string;
+  startDate: string;
+  endDate: string;
+  status: string;
+  autoRenew: boolean;
+  notes: string;
+};
+
+const defaultForm: ContractFormData = {
+  clientName: "", clientEmail: "", description: "",
+  mrr: "", totalValue: "",
+  startDate: new Date().toISOString().slice(0, 10),
+  endDate: new Date(Date.now() + 365 * 24 * 3600000).toISOString().slice(0, 10),
+  status: "active", autoRenew: true, notes: "",
+};
+
 function RenewalBadge({ days }: { days: number }) {
-  if (days > 60) return null;
-  const color = days <= 0 ? "#EF4444" : days <= 30 ? "#F97316" : "#F59E0B";
-  const label = days <= 0 ? "Vencido" : `${days}d`;
+  if (days > 90) return null;
+  const color = days <= 0 ? "#EF4444" : days <= 30 ? "#F97316" : days <= 60 ? "#F59E0B" : "#06B6D4";
+  const label = days <= 0 ? "Vencido" : days <= 30 ? `${days}d` : days <= 60 ? `${days}d` : `${days}d`;
   return (
     <span className="px-1.5 py-0.5 rounded text-xs font-semibold" style={{ background: `${color}15`, color }}>
       {label}
@@ -24,26 +47,36 @@ function RenewalBadge({ days }: { days: number }) {
   );
 }
 
-function CreateModal({ onClose }: { onClose: () => void }) {
-  const [form, setForm] = useState({
-    clientName: "", clientEmail: "", description: "",
-    mrr: "", totalValue: "", startDate: new Date().toISOString().slice(0, 10),
-    endDate: new Date(Date.now() + 365 * 24 * 3600000).toISOString().slice(0, 10),
-    status: "active", autoRenew: true, notes: "",
-  });
-  const mutation = useCreateContract();
+function ContractModal({
+  mode,
+  initial,
+  onClose,
+}: {
+  mode: "create" | "edit";
+  initial?: ContractFormData & { id?: number };
+  onClose: () => void;
+}) {
+  const [form, setForm] = useState<ContractFormData>(initial ?? defaultForm);
+  const createMutation = useCreateContract();
+  const updateMutation = useUpdateContract();
 
   const submit = () => {
-    mutation.mutate({
-      data: {
-        ...form,
-        mrr: form.mrr ? parseFloat(form.mrr) : undefined,
-        totalValue: form.totalValue ? parseFloat(form.totalValue) : undefined,
-      } as any
-    }, { onSuccess: () => onClose() });
+    const payload = {
+      ...form,
+      mrr: form.mrr ? parseFloat(form.mrr) : undefined,
+      totalValue: form.totalValue ? parseFloat(form.totalValue) : undefined,
+    } as any;
+
+    if (mode === "create") {
+      createMutation.mutate({ data: payload }, { onSuccess: () => onClose() });
+    } else if (initial?.id !== undefined) {
+      updateMutation.mutate({ id: initial.id, data: payload }, { onSuccess: () => onClose() });
+    }
   };
 
-  const field = (label: string, key: keyof typeof form, type = "text", placeholder = "") => (
+  const isPending = createMutation.isPending || updateMutation.isPending;
+
+  const field = (label: string, key: keyof ContractFormData, type = "text", placeholder = "") => (
     <div>
       <label className="block text-xs text-slate-500 mb-1">{label}</label>
       <input
@@ -66,7 +99,7 @@ function CreateModal({ onClose }: { onClose: () => void }) {
         style={{ background: "hsl(217 33% 14%)", border: "1px solid hsl(217 33% 24%)" }}
       >
         <div className="flex items-center justify-between mb-5">
-          <h3 className="text-white font-semibold">Novo Contrato</h3>
+          <h3 className="text-white font-semibold">{mode === "create" ? "Novo Contrato" : "Editar Contrato"}</h3>
           <button onClick={onClose} className="text-slate-500 hover:text-slate-300"><X size={16} /></button>
         </div>
         <div className="grid grid-cols-2 gap-3">
@@ -96,9 +129,9 @@ function CreateModal({ onClose }: { onClose: () => void }) {
         </div>
         <div className="flex gap-2 mt-5">
           <button onClick={onClose} className="flex-1 py-2 rounded-lg text-sm text-slate-400" style={{ background: "hsl(217 33% 19%)" }}>Cancelar</button>
-          <button onClick={submit} disabled={mutation.isPending || !form.clientName}
+          <button onClick={submit} disabled={isPending || !form.clientName}
             className="flex-1 py-2 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 disabled:opacity-50 transition-colors">
-            {mutation.isPending ? "Salvando..." : "Criar Contrato"}
+            {isPending ? "Salvando..." : mode === "create" ? "Criar Contrato" : "Salvar Alterações"}
           </button>
         </div>
       </motion.div>
@@ -109,15 +142,40 @@ function CreateModal({ onClose }: { onClose: () => void }) {
 export default function ContractsPage() {
   const [filter, setFilter] = useState("all");
   const [showCreate, setShowCreate] = useState(false);
+  const [editingContract, setEditingContract] = useState<any | null>(null);
 
   const { data: contracts, isLoading } = useGetContracts({ status: filter === "all" ? undefined : filter });
   const { data: summary } = useGetContractsSummary();
+  const deleteMutation = useDeleteContract();
 
   const filtered = (contracts ?? []).filter(c => filter === "all" || c.status === filter);
 
+  const handleEdit = (contract: any) => {
+    setEditingContract({
+      id: contract.id,
+      clientName: contract.clientName ?? "",
+      clientEmail: contract.clientEmail ?? "",
+      description: contract.description ?? "",
+      mrr: contract.mrr != null ? String(contract.mrr) : "",
+      totalValue: contract.totalValue != null ? String(contract.totalValue) : "",
+      startDate: contract.startDate ?? new Date().toISOString().slice(0, 10),
+      endDate: contract.endDate ?? new Date(Date.now() + 365 * 24 * 3600000).toISOString().slice(0, 10),
+      status: contract.status ?? "active",
+      autoRenew: contract.autoRenew ?? true,
+      notes: contract.notes ?? "",
+    });
+  };
+
   return (
     <div className="p-6 space-y-6">
-      {showCreate && <CreateModal onClose={() => setShowCreate(false)} />}
+      <AnimatePresence>
+        {showCreate && (
+          <ContractModal mode="create" onClose={() => setShowCreate(false)} />
+        )}
+        {editingContract && (
+          <ContractModal mode="edit" initial={editingContract} onClose={() => setEditingContract(null)} />
+        )}
+      </AnimatePresence>
 
       <div className="flex items-center justify-between">
         <div>
@@ -176,16 +234,16 @@ export default function ContractsPage() {
           <table className="w-full">
             <thead>
               <tr style={{ borderBottom: "1px solid hsl(217 33% 22%)" }}>
-                {["Cliente", "Status", "MRR", "Período", "Vencimento", "Renovação Auto"].map(h => (
+                {["Cliente", "Status", "MRR", "Período", "Vencimento", "Auto", ""].map(h => (
                   <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y" style={{ borderColor: "hsl(217 33% 18%)" }}>
               {isLoading ? (
-                <tr><td colSpan={6} className="px-4 py-8 text-center text-slate-500 text-sm">Carregando contratos...</td></tr>
+                <tr><td colSpan={7} className="px-4 py-8 text-center text-slate-500 text-sm">Carregando contratos...</td></tr>
               ) : filtered.length === 0 ? (
-                <tr><td colSpan={6} className="px-4 py-12 text-center text-slate-500 text-sm">
+                <tr><td colSpan={7} className="px-4 py-12 text-center text-slate-500 text-sm">
                   Nenhum contrato encontrado. Clique em "+ Novo Contrato" para criar.
                 </td></tr>
               ) : filtered.map(contract => {
@@ -224,6 +282,28 @@ export default function ContractsPage() {
                       <span className={`text-xs ${contract.autoRenew ? "text-emerald-400" : "text-slate-600"}`}>
                         {contract.autoRenew ? "✓ Sim" : "✗ Não"}
                       </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => handleEdit(contract)}
+                          className="p-1.5 rounded-lg text-slate-500 hover:text-blue-400 hover:bg-blue-400/10 transition-colors"
+                          title="Editar"
+                        >
+                          <Pencil size={12} />
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (confirm(`Excluir contrato de ${contract.clientName}?`)) {
+                              deleteMutation.mutate({ id: contract.id! });
+                            }
+                          }}
+                          className="p-1.5 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-400/10 transition-colors"
+                          title="Excluir"
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
                     </td>
                   </motion.tr>
                 );
