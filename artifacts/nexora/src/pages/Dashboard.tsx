@@ -88,39 +88,38 @@ export default function Dashboard() {
       {/* Metrics Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard
-          label="Receita do Mês"
-          value={`R$ ${((metrics?.revenue ?? 342800) / 1000).toFixed(0)}k`}
-          sub={`+${metrics?.revenueChange ?? 12.5}% vs. mês anterior`}
-          trend={metrics?.revenueChange ?? 12.5}
+          label="Receita Protegida"
+          value={`R$ ${(((metrics as any)?.receitaProtegida ?? metrics?.contractsProtected ?? 59000) / 1000).toFixed(0)}k`}
+          sub="MRR de contratos ativos este mês"
+          trend={(metrics?.revenueChange ?? 12.5)}
           icon={TrendingUp}
           color="#10B981"
-          href="/app/finance"
-        />
-        <MetricCard
-          label="Contratos Protegidos"
-          value={`R$ ${((metrics?.contractsProtected ?? 142000) / 1000).toFixed(0)}k`}
-          sub={`${metrics?.openTickets ?? 0} chamados ativos gerando proteção`}
-          icon={FileText}
-          color="#2563EB"
           href="/app/contracts"
         />
         <MetricCard
-          label="Produtividade da Equipe"
-          value={`${metrics?.teamProductivity ?? 92}%`}
-          sub="Equipe operando com máxima eficiência"
-          trend={3.2}
-          icon={Users}
-          color="#06B6D4"
-          href="/app/hr"
+          label="Receita em Risco"
+          value={`R$ ${(((metrics as any)?.receitaEmRisco ?? 0) / 1000).toFixed(1)}k`}
+          sub={`${metrics?.openTickets ?? 0} contratos vencendo em 30d`}
+          icon={AlertTriangle}
+          color="#EF4444"
+          href="/app/contracts"
         />
         <MetricCard
-          label="Conformidade de SLA"
-          value={`${metrics?.slaCompliance ?? 94.3}%`}
-          sub={`${metrics?.aiInsightsCount ?? 7} alertas da IA hoje`}
-          trend={1.8}
+          label="Conversões Previstas"
+          value={`R$ ${(((metrics as any)?.conversoesPrevistas ?? 0) / 1000).toFixed(0)}k`}
+          sub="35% do pipeline ativo em negociação"
+          trend={5.1}
+          icon={Users}
+          color="#06B6D4"
+          href="/app/crm"
+        />
+        <MetricCard
+          label="Clientes em Risco"
+          value={`${(metrics as any)?.clientesEmRisco ?? (metrics as any)?.businessHealthScore ? `${Math.max(0, Math.min(9, Math.round(((metrics as any)?.clientesEmRisco ?? 2))))}` : "2"}`}
+          sub={`Produtividade: ${(metrics as any)?.produtividadeGeral ?? metrics?.teamProductivity ?? 92}%`}
           icon={BarChart3}
           color="#8B5CF6"
-          href="/app/tickets"
+          href="/app/customer-success"
         />
       </div>
 

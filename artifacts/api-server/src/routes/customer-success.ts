@@ -68,7 +68,7 @@ router.get("/customer-success/churn-risk", async (_req, res) => {
       .where(and(eq(contractsTable.status, "active"), lte(contractsTable.endDate, in60days)));
 
     const dbClients = await db.select().from(clientHealthScoresTable)
-      .where(sql`health_score < 70`).limit(20);
+      .where(sql`health_score < 40 OR (health_score < 70 AND churn_risk IN ('critical','high','medium'))`).limit(20);
 
     const atRisk: any[] = [];
 

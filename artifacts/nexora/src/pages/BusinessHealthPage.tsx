@@ -165,7 +165,8 @@ export default function BusinessHealthPage() {
               contentStyle={{ background: "hsl(217 33% 17%)", border: "1px solid hsl(217 33% 24%)", borderRadius: "8px", color: "white" }}
               formatter={(v: number) => [Math.round(v), "Score"]}
             />
-            <Line type="monotone" dataKey="score" stroke="#06B6D4" strokeWidth={2.5} dot={{ fill: "#06B6D4", r: 4 }} activeDot={{ r: 6 }} />
+            <Line type="monotone" dataKey="value" stroke="#06B6D4" strokeWidth={2.5} dot={{ fill: "#06B6D4", r: 4 }} activeDot={{ r: 6 }} name="Score" />
+            <Line type="monotone" dataKey="secondary" stroke="#2563EB" strokeWidth={1.5} dot={false} strokeDasharray="4 4" name="Referência" />
           </LineChart>
         </ResponsiveContainer>
       </div>
