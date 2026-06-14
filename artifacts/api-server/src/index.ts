@@ -2,6 +2,7 @@ import app from "./app";
 import { logger } from "./lib/logger";
 import { runMigrations } from "stripe-replit-sync";
 import { getStripeSync } from "./stripeClient";
+import { db, companiesTable, tenantSettingsTable } from "@workspace/db";
 
 async function initStripe() {
   const databaseUrl = process.env["DATABASE_URL"];
@@ -29,6 +30,22 @@ async function initStripe() {
   }
 }
 
+async function initDefaultTenant() {
+  try {
+    await db
+      .insert(companiesTable)
+      .values({ id: "default", name: "Nexora Demo", plan: "enterprise", status: "active" })
+      .onConflictDoNothing();
+    await db
+      .insert(tenantSettingsTable)
+      .values({ tenantId: "default", featureFlags: {}, branding: {}, limits: {} })
+      .onConflictDoNothing();
+    logger.info("Default tenant bootstrapped");
+  } catch (err: any) {
+    logger.error({ err }, "Default tenant bootstrap error");
+  }
+}
+
 const rawPort = process.env["PORT"];
 if (!rawPort) {
   throw new Error("PORT environment variable is required but was not provided.");
@@ -39,6 +56,7 @@ if (Number.isNaN(port) || port <= 0) {
 }
 
 await initStripe();
+await initDefaultTenant();
 
 app.listen(port, (err) => {
   if (err) {

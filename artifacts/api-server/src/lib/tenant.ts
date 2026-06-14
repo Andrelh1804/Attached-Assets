@@ -5,7 +5,11 @@ import type { PgColumn } from "drizzle-orm/pg-core";
 export const DEFAULT_TENANT = "default";
 
 export function getTenantId(req: Request): string {
-  return req.tenantId ?? DEFAULT_TENANT;
+  const tid = req.tenantId;
+  if (!tid) {
+    throw new Error("tenantId not resolved — ensure tenantGuard runs before this handler");
+  }
+  return tid;
 }
 
 export function checkSuperAdmin(req: Request): boolean {
